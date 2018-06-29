@@ -1,0 +1,64 @@
+---
+
+- name: create directories
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: "{{ item.mode }}"
+  with_items:
+    - "{{ openssl_ca_folders }}"
+
+- stat: "path={{ openssl_ca_base_path }}/db.serial"
+  register: index
+- name: create db.index
+  file:
+    path: "{{ openssl_ca_base_path }}/db.index"
+    state: touch
+  when: not index.stat.exists
+
+- stat: "path={{ openssl_ca_base_path }}/db.serial"
+  register: index
+- name: create db.serial
+  template:
+    src: db.serial.j2
+    dest: "{{ openssl_ca_base_path }}/db.serial"
+    mode: 0700
+  when: not index.stat.exists
+
+- name: configure CA
+  template:
+    src: ca.conf.j2
+    dest: "{{ openssl_ca_base_path }}/ca.conf"
+    mode: 0644
+
+- name: create CA private key
+  openssl_privatekey:
+    path: "{{ openssl_ca_base_path }}/{{ openssl_ca_root_private_key }}"
+    size: "{{ openssl_ca_root_private_key_lenght }}"
+    passphrase: "{{ openssl_ca_root_private_key_passphrase }}"
+    cipher: aes256
+
+- name: create CA CSR
+  openssl_csr:
+    path: "{{ openssl_ca_base_path }}/{{ openssl_ca_root_csr }}"
+    privatekey_path: "{{ openssl_ca_base_path }}/{{ openssl_ca_root_private_key }}"
+    privatekey_passphrase: "{{ openssl_ca_root_private_key_passphrase }}"
+    country_name: "{{ openssl_ca_root_country_name }}"
+    organization_name: "{{ openssl_ca_root_organization_name }}"
+    email_address: "{{ openssl_ca_root_email_address }}"
+    common_name: "{{ openssl_ca_root_common_name }}"
+    subject_alt_name: "{{ openssl_ca_root_subject_alt_name }}"
+    basic_constraints: CA:true
+    basic_constraints_critical: true
+
+- name: Generate a Self Signed OpenSSL certificate
+  openssl_certificate:
+    path: "{{ openssl_ca_base_path }}/{{ openssl_ca_root_certificate }}"
+    privatekey_path: "{{ openssl_ca_base_path }}/{{ openssl_ca_root_private_key }}"
+    privatekey_passphrase: "{{ openssl_ca_root_private_key_passphrase }}"
+    csr_path: "{{ openssl_ca_base_path }}/{{ openssl_ca_root_csr }}"
+    provider: selfsigned
+    key_usage:
+      - cRLSign
+      - keyCertSign
+    key_usage_strict: true

@@ -3,9 +3,16 @@
 
 openssl_ca_base_path: /root/ca
 openssl_ca_folders:
-  - "{{ openssl_ca_base_path }}/db.certs"
-  - "{{ openssl_ca_base_path }}/input"
-  - "{{ openssl_ca_base_path }}/output"
+  - path: "{{ openssl_ca_base_path }}"
+    mode: "0755"
+  - path: "{{ openssl_ca_base_path }}/input"
+    mode: "0755"
+  - path: "{{ openssl_ca_base_path }}/output"
+    mode: "0755"
+  - path: "{{ openssl_ca_base_path }}/db.certs"
+    mode: "0700"
+  - path: "{{ openssl_ca_base_path }}/private_keys"
+    mode: "0700"
 
 openssl_ca_md: sha256
 openssl_ca_root_private_key_lenght: 4096
@@ -28,3 +35,5 @@ openssl_ca_root_organization_name:
 openssl_ca_root_email_address: 
 openssl_ca_root_common_name: Root-CA
 openssl_ca_root_subject_alt_name: 
+
+openssl_ca_certificates: []
