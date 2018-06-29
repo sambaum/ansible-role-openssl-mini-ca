@@ -1,0 +1,36 @@
+[ca]
+
+default_ca = default
+
+[default]
+
+dir = {{ openssl_ca_base_path }}
+certs = $dir
+new_certs_dir = $dir/db.certs
+
+database = $dir/db.index
+serial = $dir/db.serial
+
+certificate = $dir/{{ openssl_ca_certificate }}
+private_key = $dir/{{ openssl_ca_private_key }}
+
+default_days = {{ openssl_ca_default_days }}
+default_crl_days = {{ openssl_ca_default_crl_days }}
+
+# Remember to have the CSR request generated using the same digest, e.g.
+# openssl req -new -sha256 -key foo.key -out foo.csr 
+default_md = {{ openssl_ca_md }}
+
+preserve = no
+RANDFILE = $dir/db.random
+policy = default_policy
+
+[default_policy]
+
+countryName = {{ openssl_ca_countryName }}
+stateOrProvinceName = {{ openssl_ca_stateOrProvinceName }}
+localityName = {{ openssl_ca_localityName }}
+organizationName = {{ openssl_ca_organizationName }}
+organizationalUnitName = {{ openssl_ca_organizationalUnitName }}
+commonName = {{ openssl_ca_commonName }}
+emailAddress = {{ openssl_ca_emailAddress }}
