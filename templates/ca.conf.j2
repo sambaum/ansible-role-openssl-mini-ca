@@ -1,36 +1,86 @@
-[ca]
+HOME            	= .
+RANDFILE        	= $ENV::HOME/.rnd
 
-default_ca = default
+####################################################################
+[ ca ]
 
-[default]
+default_ca    		= CA_default      # The default ca section
 
-dir = {{ openssl_ca_base_path }}
-certs = $dir
-new_certs_dir = $dir/db.certs
+[ CA_default ]
 
-database = $dir/db.index
-serial = $dir/db.serial
+default_days     	= {{ openssl_ca_default_days }}			# how long to certify for
+default_crl_days 	= {{ openssl_ca_default_crl_days }}		# how long before next CRL
+default_md       	= {{ openssl_ca_md }}					# use public key default MD
+preserve         	= no           							# keep passed DN ordering
+x509_extensions 	= ca_extensions 						# The extensions to add to the cert
+email_in_dn     	= no         						    # Don't concat the email in the DN
+copy_extensions 	= copy       						    # Required to copy SANs from CSR to cert
 
-certificate = $dir/{{ openssl_ca_root_certificate }}
-private_key = $dir/{{ openssl_ca_root_private_key }}
+dir      			= {{ openssl_ca_base_path }}
+certificate 		= $dir/{{ openssl_ca_root_certificate }}
+private_key 		= $dir/{{ openssl_ca_root_private_key }}
+new_certs_dir 		= $dir                  				# Location for new certs after signing
+database 			= $dir/db.index
+serial 				= $dir/db.serial
 
-default_days = {{ openssl_ca_default_days }}
-default_crl_days = {{ openssl_ca_default_crl_days }}
+unique_subject 		= no  									# Set to 'no' to allow creation of
+                   		 									# several certificates with same subject.
 
-# Remember to have the CSR request generated using the same digest, e.g.
-# openssl req -new -sha256 -key foo.key -out foo.csr 
-default_md = {{ openssl_ca_md }}
+####################################################################
 
-preserve = no
-RANDFILE = $dir/db.random
-policy = default_policy
+[ req ]
 
-[default_policy]
+default_bits       = {{ openssl_ca_root_private_key_lenght }}
+default_keyfile    = {{ openssl_ca_root_private_key }}
+distinguished_name = ca_distinguished_name
+x509_extensions    = ca_extensions
+string_mask        = utf8only
 
-countryName = {{ openssl_ca_countryName }}
-stateOrProvinceName = {{ openssl_ca_stateOrProvinceName }}
-localityName = {{ openssl_ca_localityName }}
-organizationName = {{ openssl_ca_organizationName }}
-organizationalUnitName = {{ openssl_ca_organizationalUnitName }}
-commonName = {{ openssl_ca_commonName }}
-emailAddress = {{ openssl_ca_emailAddress }}
+####################################################################
+
+[ ca_distinguished_name ]
+
+countryName         			= Country Name (2 letter code)
+countryName_default 			= {{ openssl_ca_root_country_name }}
+stateOrProvinceName         	= State or Province Name (full name)
+stateOrProvinceName_default 	= {{ openssl_ca_root_state }}
+localityName                	= Locality Name (eg, city)
+localityName_default        	= {{ openssl_ca_locality_name }}
+organizationName            	= Organization Name (eg, company)
+organizationName_default  		= {{ openssl_ca_root_organization_name }}
+organizationalUnitName          = Organizational Unit (eg, division)
+organizationalUnitName_default 	= {{ openssl_ca_root_organization_unit_name }}
+commonName         				= Common Name (e.g. server FQDN or YOUR name)
+commonName_default 				= {{ openssl_ca_root_common_name }}
+emailAddress         			= Email Address
+emailAddress_default 			= {{ openssl_ca_root_email_address }}
+
+####################################################################
+
+[ signing_policy ]
+
+countryName 					= {{ openssl_ca_countryName_policy }}
+stateOrProvinceName 			= {{ openssl_ca_stateOrProvinceName_policy }}
+localityName 					= {{ openssl_ca_localityName_policy }}
+organizationName 				= {{ openssl_ca_organizationName_policy }}
+organizationalUnitName 			= {{ openssl_ca_organizationalUnitName_policy }}
+commonName 						= {{ openssl_ca_commonName_policy }}
+emailAddress 					= {{ openssl_ca_emailAddress_policy }}
+
+####################################################################
+
+[ ca_extensions ]
+
+subjectKeyIdentifier   = hash
+authorityKeyIdentifier = keyid:always, issuer
+basicConstraints       = critical, CA:true
+keyUsage               = keyCertSign, cRLSign
+
+####################################################################
+
+[ signing_req ]
+
+subjectKeyIdentifier   = hash
+authorityKeyIdentifier = keyid,issuer
+basicConstraints       = CA:FALSE
+keyUsage               = digitalSignature, keyEncipherment

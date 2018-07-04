@@ -14,24 +14,29 @@ openssl_ca_folders:
   - path: "{{ openssl_ca_base_path }}/private_keys"
     mode: "0700"
 
+#openssl_ca_root_key_name: cacert.pem
+
 openssl_ca_md: sha256
 openssl_ca_root_private_key_lenght: 4096
-openssl_ca_default_days: 730
+openssl_ca_default_days: 7300
 openssl_ca_default_crl_days: 30
-openssl_ca_root_certificate: root.crt
-openssl_ca_root_private_key: root.key
+openssl_ca_root_certificate: cacert.pem
+openssl_ca_root_private_key: cakey.pem
 openssl_ca_root_private_key_passphrase: "{{ vault_openssl_ca_root_private_key_passphrase }}"
 openssl_ca_root_csr: root.csr
-openssl_ca_countryName: optional
-openssl_ca_stateOrProvinceName: optional
-openssl_ca_localityName: optional
-openssl_ca_organizationName: optional
-openssl_ca_organizationalUnitName: optional
-openssl_ca_commonName: supplied
-openssl_ca_emailAddress: optional
+openssl_ca_countryName_policy: optional
+openssl_ca_stateOrProvinceName_policy: optional
+openssl_ca_localityName_policy: optional
+openssl_ca_organizationName_policy: optional
+openssl_ca_organizationalUnitName_policy: optional
+openssl_ca_commonName_policy: supplied
+openssl_ca_emailAddress_policy: optional
 
 openssl_ca_root_country_name:
+openssl_ca_root_state:
+openssl_ca_locality_name:
 openssl_ca_root_organization_name: 
+openssl_ca_root_organization_unit_name: 
 openssl_ca_root_email_address: 
 openssl_ca_root_common_name: Root-CA
 openssl_ca_root_subject_alt_name: 
