@@ -2,7 +2,7 @@
 # defaults file for ansible-role-openssl-mini-ca
 
 openssl_ca_cnf_file: openssl-ca.cnf
-openssl_server_cnf_file:
+openssl_server_cnf_file: openssl-server.cnf
 
 openssl_ca_base_path: /root/ca
 openssl_ca_folders:
@@ -43,5 +43,14 @@ openssl_ca_root_organization_unit_name:
 openssl_ca_root_email_address: 
 openssl_ca_root_common_name: Root-CA
 openssl_ca_root_subject_alt_name: 
+
+openssl_server_root_country_name:
+openssl_server_root_state:
+openssl_server_locality_name:
+openssl_server_root_organization_name: 
+openssl_server_root_organization_unit_name: 
+openssl_server_root_email_address: 
+openssl_server_root_common_name: Root-CA
+openssl_server_root_subject_alt_name: 
 
 openssl_ca_certificates: []

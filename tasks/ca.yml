@@ -25,10 +25,16 @@
     mode: 0700
   when: not index.stat.exists
 
-- name: configure CA
+- name: configure CA (root)
   template:
     src: "{{ openssl_ca_cnf_file }}.j2"
     dest: "{{ openssl_ca_base_path }}/{{ openssl_ca_cnf_file }}"
+    mode: 0644
+
+- name: configure CA (server)
+  template:
+    src: "{{ openssl_server_cnf_file }}.j2"
+    dest: "{{ openssl_ca_base_path }}/{{ openssl_server_cnf_file }}"
     mode: 0644
 
 #- name: create CA private key
