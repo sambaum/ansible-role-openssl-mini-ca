@@ -27,8 +27,8 @@
 
 - name: configure CA
   template:
-    src: ca.conf.j2
-    dest: "{{ openssl_ca_base_path }}/ca.conf"
+    src: "{{ openssl_ca_cnf_file }}.j2"
+    dest: "{{ openssl_ca_base_path }}/{{ openssl_ca_cnf_file }}"
     mode: 0644
 
 #- name: create CA private key
@@ -65,13 +65,13 @@
 
 - debug:
     msg: |
-      openssl req -x509 -config {{ openssl_ca_base_path }}/ca.conf -newkey rsa:4096 -sha256 -out {{ openssl_ca_root_private_key }} -outform PEM -passout pass:{{ openssl_ca_root_private_key_passphrase }}  -batch
+      openssl req -x509 -config {{ openssl_ca_base_path }}/{{ openssl_ca_cnf_file }} -newkey rsa:4096 -sha256 -out {{ openssl_ca_root_private_key }} -outform PEM -passout pass:{{ openssl_ca_root_private_key_passphrase }}  -batch
 
 - name: create CA key and CSR
   command: |
     openssl req
     -x509
-    -config {{ openssl_ca_base_path }}/ca.conf
+    -config {{ openssl_ca_base_path }}/{{ openssl_ca_cnf_file }}
     -newkey rsa:4096
     -sha256
     -out {{ openssl_ca_base_path }}/{{ openssl_ca_root_certificate }}

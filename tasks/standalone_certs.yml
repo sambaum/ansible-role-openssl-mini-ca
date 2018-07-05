@@ -18,7 +18,7 @@
     - "{{ openssl_ca_certificates }}"
 
 - debug:
-    msg: "openssl ca -config {{ openssl_ca_base_path }}/ca.conf -in {{ item.csr_path }} -out {{ item.crt_path }} -passin pass:{{ openssl_ca_root_private_key_passphrase }}"
+    msg: "openssl ca -config {{ openssl_ca_base_path }}/{{ openssl_ca_cnf_file }} -in {{ item.csr_path }} -out {{ item.crt_path }} -passin pass:{{ openssl_ca_root_private_key_passphrase }}"
   with_items:
     - "{{ openssl_ca_certificates }}"
 
@@ -29,7 +29,7 @@
 - name: revoke certificates
   command: |
     openssl ca
-    -config {{ openssl_ca_base_path }}/ca.conf
+    -config {{ openssl_ca_base_path }}/{{ openssl_ca_cnf_file }}
     -revoke {{ item.crt_path }}
     -passin pass:{{ openssl_ca_root_private_key_passphrase }} 
     -batch
@@ -49,7 +49,7 @@
 - name: create certificates
   command: |
     openssl ca
-    -config {{ openssl_ca_base_path }}/ca.conf
+    -config {{ openssl_ca_base_path }}/{{ openssl_ca_cnf_file }}
     -in {{ item.csr_path }}
     -out {{ item.crt_path }}
     -passin pass:{{ openssl_ca_root_private_key_passphrase }}
