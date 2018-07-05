@@ -19,7 +19,7 @@ copy_extensions 	= copy       						    # Required to copy SANs from CSR to cert
 dir      			= {{ openssl_ca_base_path }}
 certificate 		= $dir/{{ openssl_ca_root_certificate }}
 private_key 		= $dir/{{ openssl_ca_root_private_key }}
-new_certs_dir 		= $dir                  				# Location for new certs after signing
+new_certs_dir 		= $dir/output              				# Location for new certs after signing
 database 			= $dir/db.index
 serial 				= $dir/db.serial
 
