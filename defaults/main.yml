@@ -21,7 +21,8 @@ openssl_ca_folders:
 
 openssl_ca_md: sha256
 openssl_ca_root_private_key_lenght: 4096
-openssl_ca_default_days: 7300
+openssl_ca_root_days: 7300
+openssl_ca_default_days: 730
 openssl_ca_default_crl_days: 30
 openssl_ca_root_certificate: cacert.pem
 openssl_ca_root_private_key: cakey.pem
@@ -35,22 +36,22 @@ openssl_ca_organizationalUnitName_policy: optional
 openssl_ca_commonName_policy: supplied
 openssl_ca_emailAddress_policy: optional
 
-openssl_ca_root_country_name:
-openssl_ca_root_state:
-openssl_ca_locality_name:
+openssl_ca_root_country_name: CH
+openssl_ca_root_state: ZH
+openssl_ca_locality_name: Zurich
 openssl_ca_root_organization_name: 
 openssl_ca_root_organization_unit_name: 
 openssl_ca_root_email_address: 
 openssl_ca_root_common_name: Root-CA
 openssl_ca_root_subject_alt_name: 
 
-openssl_server_root_country_name:
-openssl_server_root_state:
-openssl_server_locality_name:
-openssl_server_root_organization_name: 
-openssl_server_root_organization_unit_name: 
-openssl_server_root_email_address: 
-openssl_server_root_common_name: Root-CA
-openssl_server_root_subject_alt_name: 
+openssl_server_country_name: CH
+openssl_server_state: ZH
+openssl_server_locality_name: Zurich
+openssl_server_organization_name:
+openssl_server_organization_unit_name:
+openssl_server_email_address:
+openssl_server_common_name:
+openssl_server_subject_alt_name:
 
 openssl_ca_certificates: []

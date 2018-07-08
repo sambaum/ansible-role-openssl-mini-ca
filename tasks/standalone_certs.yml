@@ -1,60 +1,63 @@
 ---
 
-- name: create private keys
-  openssl_privatekey:
-    path: "{{ item.privatekey_path }}"
-    size: "{{ item.keysize }}"
-  when: item.generate_private_key
-  with_items:
-    - "{{ openssl_ca_certificates }}"
+#- name: create private keys
+#  openssl_privatekey:
+#    path: "{{ item.privatekey_path }}"
+#    size: "{{ item.keysize }}"
+#  when: item.generate_private_key
+#  with_items:
+#    - "{{ openssl_ca_certificates }}"
 
-- name: create certificate CSR's
-  openssl_csr:
-    path: "{{ item.csr_path }}"
-    privatekey_path: "{{ item.privatekey_path }}" 
-    common_name: "{{ item.common_name }}" 
-    subject_alt_name: "{{ item.subject_alt_name }}" 
-  with_items:
-    - "{{ openssl_ca_certificates }}"
+#- name: create certificate CSR's
+#  openssl_csr:
+#    path: "{{ item.csr_path }}"
+#    privatekey_path: "{{ item.privatekey_path }}" 
+#    common_name: "{{ item.common_name }}" 
+#    subject_alt_name: "{{ item.subject_alt_name }}" 
+#  with_items:
+#    - "{{ openssl_ca_certificates }}"
 
-- debug:
-    msg: "openssl ca -config {{ openssl_ca_base_path }}/{{ openssl_ca_cnf_file }} -in {{ item.csr_path }} -out {{ item.crt_path }} -passin pass:{{ openssl_ca_root_private_key_passphrase }}"
-  with_items:
-    - "{{ openssl_ca_certificates }}"
+#- debug:
+#    msg: "openssl ca -config {{ openssl_ca_base_path }}/{{ openssl_ca_cnf_file }} -in {{ item.csr_path }} -out {{ item.crt_path }} -passin pass:{{ openssl_ca_root_private_key_passphrase }}"
+#  with_items:
+#    - "{{ openssl_ca_certificates }}"
 
 
 
 # provider "ownca" might be available in ansible 2.7
 
-- name: revoke certificates
-  command: |
-    openssl ca
-    -config {{ openssl_ca_base_path }}/{{ openssl_ca_cnf_file }}
-    -revoke {{ item.crt_path }}
-    -passin pass:{{ openssl_ca_root_private_key_passphrase }} 
-    -batch
-  when: item.revoke_and_recreate
-  with_items:
-    - "{{ openssl_ca_certificates }}"
-  failed_when: false
+#- name: revoke certificates
+#  command: |
+#    openssl ca
+#    -config {{ openssl_ca_base_path }}/{{ openssl_ca_cnf_file }}
+#    -revoke {{ item.crt_path }}
+#    -passin pass:{{ openssl_ca_root_private_key_passphrase }} 
+#    -batch
+#  when: item.revoke_and_recreate
+#  with_items:
+#    - "{{ openssl_ca_certificates }}"
+#  failed_when: false
 
-- name: delete certificates
-  file:
-    path: "{{ item.crt_path }}"
-    state: absent
-  when: item.revoke_and_recreate
-  with_items:
-    - "{{ openssl_ca_certificates }}"
+#- name: delete certificates
+#  file:
+#    path: "{{ item.crt_path }}"
+#    state: absent
+#  when: item.revoke_and_recreate
+#  with_items:
+#    - "{{ openssl_ca_certificates }}"
 
-- name: create certificates
-  command: |
-    openssl ca
-    -config {{ openssl_ca_base_path }}/{{ openssl_ca_cnf_file }}
-    -in {{ item.csr_path }}
-    -out {{ item.crt_path }}
-    -passin pass:{{ openssl_ca_root_private_key_passphrase }}
-    -batch
-  args:
-    creates: "{{ item.crt_path }}"
-  with_items:
-    - "{{ openssl_ca_certificates }}"
+#- name: create certificates
+#  command: |
+#    openssl ca
+#    -config {{ openssl_ca_base_path }}/{{ openssl_ca_cnf_file }}
+#    -in {{ item.csr_path }}
+#    -out {{ item.crt_path }}
+#    -passin pass:{{ openssl_ca_root_private_key_passphrase }}
+#    -batch
+#  args:
+#    creates: "{{ item.crt_path }}"
+#  with_items:
+#    - "{{ openssl_ca_certificates }}"
+
+
+

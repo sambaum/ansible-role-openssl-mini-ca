@@ -84,9 +84,14 @@
     -outform PEM
     -passout pass:{{ openssl_ca_root_private_key_passphrase }} 
     -batch
+    -days {{ openssl_ca_root_days }}
   args:
     creates: "{{ openssl_ca_base_path }}/{{ openssl_ca_root_private_key }}"
     chdir: "{{ openssl_ca_base_path }}"
 #  failed_when: false
-
      
+- name: configure CA (key/csr script)
+  template:
+    src: openssl_generate_private_key.sh.j2
+    dest: "{{ openssl_ca_base_path }}/openssl_generate_private_key.sh"
+    mode: 0744

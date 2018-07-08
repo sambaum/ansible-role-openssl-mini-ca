@@ -3,5 +3,5 @@
 - name: include ca tasks
   include_tasks: ca.yml
 
-#- name: include tasks to generate certificates
-#  include_tasks: standalone_certs.yml
+- name: include tasks to generate certificates
+  include_tasks: standalone_certs.yml
