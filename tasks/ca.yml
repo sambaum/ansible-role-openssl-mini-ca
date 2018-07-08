@@ -95,3 +95,9 @@
     src: openssl_generate_private_key.sh.j2
     dest: "{{ openssl_ca_base_path }}/openssl_generate_private_key.sh"
     mode: 0744
+
+- name: configure CA (signing script)
+  template:
+    src: openssl_sign.sh.j2
+    dest: "{{ openssl_ca_base_path }}/openssl_sign.sh"
+    mode: 0744
