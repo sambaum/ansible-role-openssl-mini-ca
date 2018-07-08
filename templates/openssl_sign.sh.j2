@@ -1,0 +1,23 @@
+#!/bin/bash
+
+FILENAME=$1
+
+usage()
+{
+    echo "usage: ./${0##*/} <FILENAME>"
+    exit 1
+}
+
+if [ -z $FILENAME ]; then
+    echo "Must provide filename"
+    usage
+fi
+
+openssl ca \
+  -batch \
+  -config {{ openssl_ca_cnf_file }} \
+  -policy signing_policy \
+  -extensions signing_req \
+  -out output/$FILENAME.crt \
+  -in input/$FILENAME.csr \
+  -passin pass:{{ openssl_ca_root_private_key_passphrase }}
