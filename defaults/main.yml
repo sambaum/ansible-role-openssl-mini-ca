@@ -54,4 +54,4 @@ openssl_server_email_address:
 openssl_server_common_name:
 openssl_server_subject_alt_name:
 
-openssl_ca_certificates: []
+#openssl_ca_certificates: []
