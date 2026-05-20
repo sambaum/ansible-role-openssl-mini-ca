@@ -30,7 +30,7 @@ unique_subject 		= no  									# Set to 'no' to allow creation of
 
 [ req ]
 
-default_bits       = {{ openssl_ca_root_private_key_lenght }}
+default_bits       = {{ openssl_ca_root_private_key_length }}
 default_keyfile    = {{ openssl_ca_root_private_key }}
 distinguished_name = ca_distinguished_name
 x509_extensions    = ca_extensions

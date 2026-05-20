@@ -8,24 +8,28 @@
   with_items:
     - "{{ openssl_ca_folders }}"
 
-- ansible.builtin.stat:
-    path: "{{ openssl_ca_base_path }}/db.serial"
-  register: index
+- name: Check if db.index exists
+  ansible.builtin.stat:
+    path: "{{ openssl_ca_base_path }}/db.index"
+  register: db_index
+
 - name: create db.index
   ansible.builtin.file:
     path: "{{ openssl_ca_base_path }}/db.index"
     state: touch
-  when: not index.stat.exists
+  when: not db_index.stat.exists
 
-- ansible.builtin.stat:
+- name: Check if db.serial exists
+  ansible.builtin.stat:
     path: "{{ openssl_ca_base_path }}/db.serial"
-  register: index
+  register: db_serial
+
 - name: create db.serial
   ansible.builtin.template:
     src: db.serial.j2
     dest: "{{ openssl_ca_base_path }}/db.serial"
-    mode: 0700
-  when: not index.stat.exists
+    mode: '0700'
+  when: not db_serial.stat.exists
 
 - name: configure CA (root)
   ansible.builtin.template:
