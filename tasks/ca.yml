@@ -1,44 +1,46 @@
 ---
 
 - name: create directories
-  file:
+  ansible.builtin.file:
     path: "{{ item.path }}"
     state: directory
     mode: "{{ item.mode }}"
   with_items:
     - "{{ openssl_ca_folders }}"
 
-- stat: "path={{ openssl_ca_base_path }}/db.serial"
+- ansible.builtin.stat:
+    path: "{{ openssl_ca_base_path }}/db.serial"
   register: index
 - name: create db.index
-  file:
+  ansible.builtin.file:
     path: "{{ openssl_ca_base_path }}/db.index"
     state: touch
   when: not index.stat.exists
 
-- stat: "path={{ openssl_ca_base_path }}/db.serial"
+- ansible.builtin.stat:
+    path: "{{ openssl_ca_base_path }}/db.serial"
   register: index
 - name: create db.serial
-  template:
+  ansible.builtin.template:
     src: db.serial.j2
     dest: "{{ openssl_ca_base_path }}/db.serial"
     mode: 0700
   when: not index.stat.exists
 
 - name: configure CA (root)
-  template:
+  ansible.builtin.template:
     src: "{{ openssl_ca_cnf_file }}.j2"
     dest: "{{ openssl_ca_base_path }}/{{ openssl_ca_cnf_file }}"
     mode: 0644
 
 - name: configure CA (server)
-  template:
+  ansible.builtin.template:
     src: "{{ openssl_server_cnf_file }}.j2"
     dest: "{{ openssl_ca_base_path }}/{{ openssl_server_cnf_file }}"
     mode: 0644
 
 - name: create CA key and CSR
-  command: |
+  ansible.builtin.command: |
     openssl req
     -x509
     -config {{ openssl_ca_base_path }}/{{ openssl_ca_cnf_file }}
@@ -46,21 +48,21 @@
     -sha256
     -out {{ openssl_ca_base_path }}/{{ openssl_ca_root_certificate }}
     -outform PEM
-    -passout pass:{{ openssl_ca_root_private_key_passphrase }} 
+    -passout pass:{{ openssl_ca_root_private_key_passphrase }}
     -batch
     -days {{ openssl_ca_root_days }}
   args:
     creates: "{{ openssl_ca_base_path }}/{{ openssl_ca_root_private_key }}"
     chdir: "{{ openssl_ca_base_path }}"
-     
+
 - name: configure CA (key/csr script)
-  template:
+  ansible.builtin.template:
     src: openssl_generate_private_key.sh.j2
     dest: "{{ openssl_ca_base_path }}/openssl_generate_private_key.sh"
     mode: 0744
 
 - name: configure CA (signing script)
-  template:
+  ansible.builtin.template:
     src: openssl_sign.sh.j2
     dest: "{{ openssl_ca_base_path }}/openssl_sign.sh"
     mode: 0744
