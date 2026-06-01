@@ -11,9 +11,9 @@
 #- name: create certificate CSR's
 #  openssl_csr:
 #    path: "{{ item.csr_path }}"
-#    privatekey_path: "{{ item.privatekey_path }}" 
-#    common_name: "{{ item.common_name }}" 
-#    subject_alt_name: "{{ item.subject_alt_name }}" 
+#    privatekey_path: "{{ item.privatekey_path }}"
+#    common_name: "{{ item.common_name }}"
+#    subject_alt_name: "{{ item.subject_alt_name }}"
 #  with_items:
 #    - "{{ openssl_ca_certificates }}"
 
@@ -22,8 +22,6 @@
 #  with_items:
 #    - "{{ openssl_ca_certificates }}"
 
-
-
 # provider "ownca" might be available in ansible 2.7
 
 #- name: revoke certificates
@@ -31,7 +29,7 @@
 #    openssl ca
 #    -config {{ openssl_ca_base_path }}/{{ openssl_ca_cnf_file }}
 #    -revoke {{ item.crt_path }}
-#    -passin pass:{{ openssl_ca_root_private_key_passphrase }} 
+#    -passin pass:{{ openssl_ca_root_private_key_passphrase }}
 #    -batch
 #  when: item.revoke_and_recreate
 #  with_items:
@@ -58,6 +56,3 @@
 #    creates: "{{ item.crt_path }}"
 #  with_items:
 #    - "{{ openssl_ca_certificates }}"
-
-
-

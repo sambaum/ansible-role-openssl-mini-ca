@@ -1,6 +1,6 @@
 ---
 
-- name: include ca tasks
+- name: Include ca tasks
   ansible.builtin.include_tasks: ca.yml
 
 #- name: include tasks to generate certificates

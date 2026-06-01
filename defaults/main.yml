@@ -28,22 +28,22 @@ openssl_ca_root_certificate: cacert.pem
 openssl_ca_root_private_key: cakey.pem
 openssl_ca_root_private_key_passphrase: "{{ vault_openssl_ca_root_private_key_passphrase }}"
 openssl_ca_root_csr: root.csr
-openssl_ca_countryName_policy: optional
-openssl_ca_stateOrProvinceName_policy: optional
-openssl_ca_localityName_policy: optional
-openssl_ca_organizationName_policy: optional
-openssl_ca_organizationalUnitName_policy: optional
-openssl_ca_commonName_policy: supplied
-openssl_ca_emailAddress_policy: optional
+openssl_ca_country_name_policy: optional
+openssl_ca_state_or_province_name_policy: optional
+openssl_ca_locality_name_policy: optional
+openssl_ca_organization_name_policy: optional
+openssl_ca_organizational_unit_name_policy: optional
+openssl_ca_common_name_policy: supplied
+openssl_ca_email_address_policy: optional
 
 openssl_ca_root_country_name: CH
 openssl_ca_root_state: ZH
 openssl_ca_locality_name: Zurich
-openssl_ca_root_organization_name: 
-openssl_ca_root_organization_unit_name: 
-openssl_ca_root_email_address: 
+openssl_ca_root_organization_name:
+openssl_ca_root_organization_unit_name:
+openssl_ca_root_email_address:
 openssl_ca_root_common_name: Root-CA
-openssl_ca_root_subject_alt_name: 
+openssl_ca_root_subject_alt_name:
 
 openssl_server_country_name: CH
 openssl_server_state: ZH

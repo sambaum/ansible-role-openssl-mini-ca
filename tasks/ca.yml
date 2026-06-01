@@ -1,6 +1,6 @@
 ---
 
-- name: create directories
+- name: Create directories
   ansible.builtin.file:
     path: "{{ item.path }}"
     state: directory
@@ -13,7 +13,7 @@
     path: "{{ openssl_ca_base_path }}/db.index"
   register: db_index
 
-- name: create db.index
+- name: Create db.index
   ansible.builtin.file:
     path: "{{ openssl_ca_base_path }}/db.index"
     state: touch
@@ -24,26 +24,26 @@
     path: "{{ openssl_ca_base_path }}/db.serial"
   register: db_serial
 
-- name: create db.serial
+- name: Create db.serial
   ansible.builtin.template:
     src: db.serial.j2
     dest: "{{ openssl_ca_base_path }}/db.serial"
     mode: '0700'
   when: not db_serial.stat.exists
 
-- name: configure CA (root)
+- name: Configure CA (root)
   ansible.builtin.template:
     src: "{{ openssl_ca_cnf_file }}.j2"
     dest: "{{ openssl_ca_base_path }}/{{ openssl_ca_cnf_file }}"
     mode: 0644
 
-- name: configure CA (server)
+- name: Configure CA (server)
   ansible.builtin.template:
     src: "{{ openssl_server_cnf_file }}.j2"
     dest: "{{ openssl_ca_base_path }}/{{ openssl_server_cnf_file }}"
     mode: 0644
 
-- name: create CA key and CSR
+- name: Create CA key and CSR
   ansible.builtin.command: |
     openssl req
     -x509
@@ -59,13 +59,13 @@
     creates: "{{ openssl_ca_base_path }}/{{ openssl_ca_root_private_key }}"
     chdir: "{{ openssl_ca_base_path }}"
 
-- name: configure CA (key/csr script)
+- name: Configure CA (key/csr script)
   ansible.builtin.template:
     src: openssl_generate_private_key.sh.j2
     dest: "{{ openssl_ca_base_path }}/openssl_generate_private_key.sh"
     mode: 0744
 
-- name: configure CA (signing script)
+- name: Configure CA (signing script)
   ansible.builtin.template:
     src: openssl_sign.sh.j2
     dest: "{{ openssl_ca_base_path }}/openssl_sign.sh"
