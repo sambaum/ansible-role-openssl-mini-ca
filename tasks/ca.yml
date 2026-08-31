@@ -70,3 +70,9 @@
     src: openssl_sign.sh.j2
     dest: "{{ openssl_ca_base_path }}/openssl_sign.sh"
     mode: 0744
+
+- name: Deploy CA README
+  ansible.builtin.template:
+    src: README.md.j2
+    dest: "{{ openssl_ca_base_path }}/README.md"
+    mode: 0644

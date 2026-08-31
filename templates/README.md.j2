@@ -1,0 +1,42 @@
+# {{ openssl_ca_root_common_name }}
+
+Managed by the Ansible role `ansible-role-openssl-mini-ca`.
+Scripts and `*.cnf` files here are overwritten on every playbook run — do not edit in place.
+
+## Layout
+
+    {{ "%-22s"|format(openssl_ca_root_certificate) }}root CA certificate — distribute this
+    {{ "%-22s"|format(openssl_ca_root_private_key) }}root CA private key (passphrase-protected)
+    {{ "%-22s"|format(openssl_ca_cnf_file) }}CA config, signing policy and extensions
+    {{ "%-22s"|format(openssl_server_cnf_file) }}leaf CSR config
+    input/                CSRs
+    output/               leaf keys and signed certs
+    db.certs/             signed certs archived by serial
+    db.index              issued certificate database
+    db.serial             next serial
+
+## Issue a certificate
+
+Run from `{{ openssl_ca_base_path }}` — the scripts reference the configs by relative path.
+
+    cd {{ openssl_ca_base_path }}
+    ./openssl_generate_private_key.sh foo.example.com
+    ./openssl_sign.sh foo.example.com
+
+Produces:
+
+    output/foo.example.com.key    unencrypted key, mode 0600
+    output/foo.example.com.crt    signed cert, valid {{ openssl_ca_default_days }} days
+
+SAN is `DNS:<argument>`, single name only.
+
+To renew, run both scripts again. `unique_subject = no`, so the same CN may be
+reissued; the old `output/` key and cert are overwritten without warning and a new
+`db.index` entry is added while the previous one stays valid until it expires.
+
+## Notes
+
+- Root CA is valid {{ openssl_ca_root_days }} days from creation.
+- Leaf certs carry no `extendedKeyUsage`; Apple clients may reject them for TLS.
+- `copy_extensions = copy` is on — SANs come from the CSR. `signing_req` forces
+  `CA:FALSE` and the key usage, so a CSR cannot request them.
