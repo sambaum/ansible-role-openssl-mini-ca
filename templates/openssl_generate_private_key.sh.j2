@@ -1,10 +1,13 @@
 #!/bin/bash
 
 FILENAME=$1
+SAN=$2
 
 usage()
 {
-    echo "usage: ./${0##*/} <FQDN>"
+    echo "usage: ./${0##*/} <FQDN> [SAN,...]"
+    echo "  SAN defaults to DNS:<FQDN> if omitted"
+    echo "  example: ./${0##*/} foo.example.com DNS:foo.example.com,DNS:foo,IP:192.168.1.10"
     exit 1
 }
 
@@ -13,7 +16,11 @@ if [ -z $FILENAME ]; then
     usage
 fi
 
-#openssl genrsa -out private_keys/$FILENAME.key 
+if [ -z "$SAN" ]; then
+    SAN="DNS:$FILENAME"
+fi
+
+#openssl genrsa -out private_keys/$FILENAME.key
 openssl req \
   -newkey rsa:2048 \
   -sha256 \
@@ -24,4 +31,4 @@ openssl req \
   -subj /CN=$FILENAME \
   -reqexts SAN \
   -config <(cat {{ openssl_server_cnf_file }} \
-      <(printf "\n[SAN]\nsubjectAltName=DNS:$FILENAME")) \
+      <(printf "\n[SAN]\nsubjectAltName=$SAN")) \

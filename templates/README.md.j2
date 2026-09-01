@@ -28,11 +28,46 @@ Produces:
     output/foo.example.com.key    unencrypted key, mode 0600
     output/foo.example.com.crt    signed cert, valid {{ openssl_ca_default_days }} days
 
-SAN is `DNS:<argument>`, single name only.
+Default SAN is `DNS:<name>`. Pass an explicit SAN list as the 2nd argument for
+multiple names or IP SANs:
+
+    ./openssl_generate_private_key.sh foo.example.com "DNS:foo.example.com,DNS:foo,IP:192.168.1.10"
+    ./openssl_sign.sh foo.example.com
 
 To renew, run both scripts again. `unique_subject = no`, so the same CN may be
 reissued; the old `output/` key and cert are overwritten without warning and a new
 `db.index` entry is added while the previous one stays valid until it expires.
+
+## Install the CA on clients
+
+Debian/Ubuntu:
+
+    cp {{ openssl_ca_root_certificate }} /usr/local/share/ca-certificates/{{ openssl_ca_root_common_name | lower }}.crt
+    update-ca-certificates
+
+RHEL:
+
+    cp {{ openssl_ca_root_certificate }} /etc/pki/ca-trust/source/anchors/{{ openssl_ca_root_common_name | lower }}.crt
+    update-ca-trust
+
+## Inspect
+
+    openssl x509 -in output/foo.example.com.crt -noout -text
+    openssl x509 -in {{ openssl_ca_root_certificate }} -noout -subject -dates
+    openssl verify -CAfile {{ openssl_ca_root_certificate }} output/foo.example.com.crt
+    cat db.index
+
+`db.index` columns: status (`V`/`R`/`E`), expiry, revocation date, serial, filename, subject.
+
+## Revoke
+
+The CA passphrase is embedded in `openssl_sign.sh`.
+
+    cd {{ openssl_ca_base_path }}
+    openssl ca -config {{ openssl_ca_cnf_file }} -revoke db.certs/<SERIAL>.pem -passin pass:<PASSPHRASE>
+    openssl ca -config {{ openssl_ca_cnf_file }} -gencrl -out crl.pem -passin pass:<PASSPHRASE>
+
+CRL is valid {{ openssl_ca_default_crl_days }} days; regenerate before it expires if anything consumes it.
 
 ## Notes
 
